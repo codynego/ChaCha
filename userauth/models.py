@@ -15,27 +15,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     verified = models.BooleanField(default=False)
     review = models.CharField(max_length=100, null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
-
-
+    followers = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='following')
+    
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
-    last_seen = models.DateTimeField(default='')
+    last_seen = models.DateTimeField(default=timezone.now)
 
     objects = CustomUserManager()
-
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
-
 
     def __str__(self):
         return self.username
