@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
 from .models import Story, StoryImage, StoryText, StoryVideo, StoryReaction
 from .serializers import StorySerializer, StoryImageSerializer, StoryTextSerializer, StoryVideoSerializer, StoryReactionSerializer
 
@@ -27,10 +30,28 @@ class StoryReactionAPIView(generics.ListCreateAPIView):
     queryset = StoryReaction.objects.all()
     serializer_class = StoryReactionSerializer
 
-class StoryReactionGetAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = StoryReaction.objects.all()
-    serializer_class = StoryReactionSerializer
-
-    def get_object(self):
-        story_id = self.kwargs.get('story_id')
-        return StoryReaction.objects.get(story=story_id)
+class StoryReactionGetAPIView(APIView):
+    def get(self, request, story_id):
+        story = Story.objects.get(id=story_id)
+        reactions = StoryReaction.objects.filter(story=story)
+        serializer = StoryReactionSerializer(reactions, many=True)
+        response_data = {
+            "message": "Story reactions fetched successfully!",
+            "statusCode": status.HTTP_200_OK,
+            "data": serializer.data
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    def post(self, request, story_id):
+        story = Story.objects.get(id=story_id)
+        serializer = StoryReactionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(story=story)
+            response_data = {
+                "message": "Story reaction created successfully!",
+                "statusCode": status.HTTP_201_CREATED,
+                "data": serializer.data
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
