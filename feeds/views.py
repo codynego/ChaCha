@@ -26,6 +26,12 @@ class StoryVideoAPIView(generics.ListCreateAPIView):
     serializer_class = StoryVideoSerializer
 
 
+class StorySingleAPIView(generics.RetrieveDestroyAPIView):
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+
+
+
 class StoryReactionAPIView(generics.ListCreateAPIView):
     queryset = StoryReaction.objects.all()
     serializer_class = StoryReactionSerializer
