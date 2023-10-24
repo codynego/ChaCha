@@ -4,11 +4,13 @@ from .serializers import RegistrationSerializer, UserSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
+from .models import User
 
 
 # Create your views here.
 
 class RegistrationAPIView(APIView):
+    
     def post(self, request):
         serializer = RegistrationSerializer(data=request.data)
 
@@ -63,4 +65,27 @@ class UserAPIView(generics.RetrieveUpdateDestroyAPIView):
         }
         return Response(response_data, status=status.HTTP_200_OK)
     
+
+class FollowUserAPIView(APIView):
+    def post(self, request, user_id):
+        user = request.user
+        user_to_follow = User.objects.get(id=user_id)
+        user.following.add(user_to_follow)
+        response_data = {
+            "message": "User followed successfully!",
+            "statusCode": status.HTTP_200_OK,
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+
+class UnfollowUserAPIView(APIView):
+    def post(self, request, user_id):
+        user = request.user
+        user_to_unfollow = User.objects.get(id=user_id)
+        user.following.remove(user_to_unfollow)
+        response_data = {
+            "message": "User unfollowed successfully!",
+            "statusCode": status.HTTP_200_OK,
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 

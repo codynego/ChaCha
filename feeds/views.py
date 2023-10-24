@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from .models import Story, StoryImage, StoryText, StoryVideo, StoryReaction
 from .serializers import StorySerializer, StoryImageSerializer, StoryTextSerializer, StoryVideoSerializer, StoryReactionSerializer
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -12,63 +13,38 @@ from .serializers import StorySerializer, StoryImageSerializer, StoryTextSeriali
 class StoryAPIView(generics.ListAPIView):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
+    #permission_classes = (IsAuthenticated,)
 
 class StoryTextAPIView(generics.ListCreateAPIView):
     queryset = StoryText.objects.all()
     serializer_class = StoryTextSerializer
+    #permission_classes = (IsAuthenticated,)
 
 class StoryImageAPIView(generics.ListCreateAPIView):
     queryset = StoryImage.objects.all()
     serializer_class = StoryImageSerializer
+    permission_classes = (IsAuthenticated,)
 
 class StoryVideoAPIView(generics.ListCreateAPIView):
     queryset = StoryVideo.objects.all()
     serializer_class = StoryVideoSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class StorySingleAPIView(generics.RetrieveDestroyAPIView):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
+    permission_classes = (IsAuthenticated,)
 
 
 
-class StoryReactionAPIView(generics.ListCreateAPIView):
+class StoryReactionGetAPIView(generics.ListCreateAPIView):
     queryset = StoryReaction.objects.all()
     serializer_class = StoryReactionSerializer
+    #permission_classes = (IsAuthenticated,)
 
-class StoryReactionGetAPIView(APIView):
-    def get(self, request, story_id):
-        story = Story.objects.get(id=story_id)
-        reactions = StoryReaction.objects.filter(story=story)
-        serializer = StoryReactionSerializer(reactions, many=True)
-        response_data = {
-            "message": "Story reactions fetched successfully!",
-            "statusCode": status.HTTP_200_OK,
-            "data": serializer.data
-        }
-        return Response(response_data, status=status.HTTP_200_OK)
-    
-    def post(self, request, story_id):
-        story = Story.objects.get(id=story_id)
-        serializer = StoryReactionSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(story=story)
-            response_data = {
-                "message": "Story reaction created successfully!",
-                "statusCode": status.HTTP_201_CREATED,
-                "data": serializer.data
-            }
-            return Response(response_data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
         
 
-    
-class TestSomething(APIView):
-    def get(self, request):
-        story = Story.objects.get(id=11)
-        print(story.content_object)
-        print((story.content_object).text)
-        print(type(story.content_object))
-        print(story.content_object)
-        return Response({"message": "Hello World!"})
+
