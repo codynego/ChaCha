@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 class StoryAPIView(generics.ListAPIView):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
 class StoryTextAPIView(generics.ListCreateAPIView):
     queryset = StoryText.objects.all()
@@ -41,7 +41,7 @@ class StorySingleAPIView(generics.RetrieveDestroyAPIView):
 class StoryReactionGetAPIView(generics.ListCreateAPIView):
     queryset = StoryReaction.objects.all()
     serializer_class = StoryReactionSerializer
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
 
 

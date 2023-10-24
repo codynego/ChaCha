@@ -58,6 +58,14 @@ class StoryTextSerializer(serializers.ModelSerializer):
 
 
 class StoryReactionSerializer(serializers.ModelSerializer):
+    story_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = StoryReaction
         fields = '__all__'
+
+    def create(self, validated_data):
+        story_id = validated_data.pop('story_id')
+        story = Story.objects.get(id=story_id)
+        reaction = StoryReaction.objects.create(story=story, **validated_data)
+        return reaction
