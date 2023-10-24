@@ -5,5 +5,5 @@ class FeedsConfig(AppConfig):
     name = 'feeds'
 
     def ready(self):
-        import feeds.models  # Import your app's models.py
+        import feeds.signals # Import your app's models.py
 

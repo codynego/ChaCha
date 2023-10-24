@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from userauth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
-from . import signals
 
 # Create your models here.
 
@@ -46,13 +45,4 @@ class StoryReaction(models.Model):
 
 
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .models import Story, StoryImage, StoryVideo, StoryText
 
-@receiver(post_save, sender=StoryImage)
-@receiver(post_save, sender=StoryVideo)
-@receiver(post_save, sender=StoryText)
-def create_story_on_content_creation(sender, instance, created, **kwargs):
-    if created:
-        Story.objects.create(user=instance.user, content_object=instance)

@@ -21,6 +21,7 @@ class StorySerializer(serializers.ModelSerializer):
 
     def get_content(self, obj):
         content_object = obj.content_object
+        print(content_object)
         if isinstance(content_object, StoryText):
             return content_object.text
         elif isinstance(content_object, StoryImage):

@@ -9,6 +9,7 @@ urlpatterns = [
     path('story/video/', views.StoryVideoAPIView.as_view(), name='story_video'),
     path('story/reaction/', views.StoryReactionAPIView.as_view(), name='story_reaction'),
     path('story/reaction/<story_id>/', views.StoryReactionGetAPIView.as_view(), name='story_reaction'),
+    path('test/', views.TestSomething.as_view(), name='test')
 
 ]
 

@@ -61,3 +61,14 @@ class StoryReactionGetAPIView(APIView):
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+    
+class TestSomething(APIView):
+    def get(self, request):
+        story = Story.objects.get(id=11)
+        print(story.content_object)
+        print((story.content_object).text)
+        print(type(story.content_object))
+        print(story.content_object)
+        return Response({"message": "Hello World!"})
