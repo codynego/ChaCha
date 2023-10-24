@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'feeds',
+    'django_cron',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,11 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'userauth.User'
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+CRON_CLASSES = [
+    'feeds.cronjobs.delete_story.DeleteStory',
+]

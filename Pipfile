@@ -8,6 +8,8 @@ djangorestframework = "*"
 djangorestframework-jwt = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
+django-crontab = "*"
+django-cron = "*"
 
 [dev-packages]
 

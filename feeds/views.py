@@ -9,7 +9,7 @@ from .serializers import StorySerializer, StoryImageSerializer, StoryTextSeriali
 # Create your views here.
 
 
-class StoryAPIView(generics.ListCreateAPIView):
+class StoryAPIView(generics.ListAPIView):
     queryset = Story.objects.all()
     serializer_class = StorySerializer
 
