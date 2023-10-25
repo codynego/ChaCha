@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from rest_framework.views import APIView, status
-from .serializers import RegistrationSerializer, UserSerializer, ReviewSerializer, FollowSerializer
+from .serializers import RegistrationSerializer, UserSerializer, ReviewSerializer, FollowSerializer, InterestSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
-from .models import User, Review
+from .models import User, Review, Interest
 from rest_framework import authentication
 from rest_framework import permissions
 
@@ -106,7 +106,7 @@ class FollowersAPIView(APIView):
 class FollowingAPIView(APIView):
     def get(self, request):
         user = request.user
-        serializer = FollowSerializerr(user.following, many=True)
+        serializer = FollowSerializer(user.following, many=True)
         response_data = {
             "message": "Following fetched successfully!",
             "statusCode": status.HTTP_200_OK,
@@ -151,6 +151,32 @@ class ReviewAPIView(APIView):
             serializer.save()
             response_data = {
                 "message": "Review posted successfully!",
+                "statusCode": status.HTTP_201_CREATED,
+            "data": serializer.validated_data
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class InterestAPIView(generics.ListCreateAPIView):
+    queryset = Interest.objects.all()
+    serializer_class = InterestSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        return Interest.objects.filter(user=user)
+    
+    def post(self, request):
+        user = request.user
+        data = request.data
+        serializer = InterestSerializer(data=data, context={'user': user})
+
+        if serializer.is_valid():
+            serializer.save()
+            response_data = {
+                "message": "Interest added successfully!",
                 "statusCode": status.HTTP_201_CREATED,
             "data": serializer.validated_data
             }

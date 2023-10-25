@@ -3,7 +3,10 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from django.urls import path
-from .views import RegistrationAPIView, UserAPIView, FollowUserAPIView, UnfollowUserAPIView, ReviewAPIView, FollowersAPIView, FollowingAPIView
+from . views import( RegistrationAPIView, UserAPIView, 
+                    FollowUserAPIView, UnfollowUserAPIView, ReviewAPIView, 
+                    FollowersAPIView, FollowingAPIView, InterestAPIView,
+                    )
 
 urlpatterns = [
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -15,4 +18,5 @@ urlpatterns = [
     path('user/review/', ReviewAPIView.as_view(), name='review_user'),
     path('user/followers/', FollowersAPIView.as_view(), name='followers'),
     path('user/following/', FollowingAPIView.as_view(), name='following'),
+    path('user/interest/', InterestAPIView.as_view(), name='interest'),
 ]

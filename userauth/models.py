@@ -14,7 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
-    interest = models.CharField(max_length=100, null=True, blank=True)
+    interest = models.ManyToManyField('Interest', blank=True, related_name='users')
     rating = models.FloatField(default=0, null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     followers = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='following')
@@ -64,4 +64,11 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.user.username} for {self.reviewed_user.username}"
+    
 
+class Interest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='interests', null=True, blank=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.name

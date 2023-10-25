@@ -1,5 +1,5 @@
 from rest_framework  import serializers
-from .models import User, Review
+from .models import User, Review, Interest
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(min_length=8, write_only=True)
@@ -49,3 +49,14 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'profile_picture']
+
+
+class InterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interest
+        fields = ['user','name']
+        read_only_fields = ('user',)
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        return Interest.objects.create(user=user, **validated_data)
