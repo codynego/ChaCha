@@ -1,5 +1,5 @@
 from rest_framework  import serializers
-from .models import User
+from .models import User, Review
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(min_length=8, write_only=True)
@@ -26,7 +26,19 @@ class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     class Meta:
         models = User
-        fields = ['first_name', 'last_name', 'username', 'email','phone_number', 'bio', 'interest', 'review', 'profile_picture', 'last_seen', 'followers_count']
+        fields = ['first_name', 'last_name', 'username', 'email','phone_number', 'bio', 'interest', 'rating', 'profile_picture', 'last_seen', 'followers_count']
 
     def get_followers_count(self, obj):
         return obj.followers.count()
+    
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['user', 'reviewed_user','content', 'rating', 'created_at']
+        read_only_fields = ('user',)
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        reviewed_usert = self.context.get('reviewed_usr')
+        return Review.objects.create(user=user,reviewed_user=reviewed_usert, **validated_data)

@@ -130,8 +130,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT authentication
+        'rest_framework.authentication.SessionAuthentication',         # Session authentication
+        'rest_framework.authentication.BasicAuthentication',           # Basic authentication
+        # Add more authentication classes here as needed
     ],
+    # Other settings...
 }
 
 from datetime import timedelta
