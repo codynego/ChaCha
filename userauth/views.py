@@ -136,7 +136,7 @@ class ReviewAPIView(APIView):
 
     def post(self, request):
         user = request.user
-        data = request.data  # Request data
+        data = request.data
 
         reviewed_user_id = data.get('reviewed_user')
 
