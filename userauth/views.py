@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView, status
-from .serializers import RegistrationSerializer, UserSerializer, ReviewSerializer
+from .serializers import RegistrationSerializer, UserSerializer, ReviewSerializer, FollowSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
@@ -92,9 +92,9 @@ class UnfollowUserAPIView(APIView):
     
 
 class FollowersAPIView(APIView):
-    def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
-        serializer = UserSerializer(user.followers, many=True)
+    def get(self, request):
+        user = request.user
+        serializer = FollowSerializer(user.followers, many=True)
         response_data = {
             "message": "Followers fetched successfully!",
             "statusCode": status.HTTP_200_OK,
@@ -104,9 +104,9 @@ class FollowersAPIView(APIView):
     
 
 class FollowingAPIView(APIView):
-    def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
-        serializer = UserSerializer(user.following, many=True)
+    def get(self, request):
+        user = request.user
+        serializer = FollowSerializerr(user.following, many=True)
         response_data = {
             "message": "Following fetched successfully!",
             "statusCode": status.HTTP_200_OK,
