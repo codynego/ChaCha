@@ -64,3 +64,4 @@ class InterestSerializer(serializers.ModelSerializer):
         user.interest.add(interest)
         user.save()
         return interest
+    
