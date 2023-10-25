@@ -24,6 +24,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
+    interest = serializers.StringRelatedField(many=True)
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email','phone_number', 'bio', 'interest', 'rating', 'profile_picture', 'last_seen', 'followers_count']
@@ -59,4 +60,7 @@ class InterestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.context.get('user')
-        return Interest.objects.create(user=user, **validated_data)
+        interest = Interest.objects.create(user=user, **validated_data)
+        user.interest.add(interest)
+        user.save()
+        return interest

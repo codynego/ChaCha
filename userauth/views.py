@@ -183,6 +183,10 @@ class InterestAPIView(generics.ListCreateAPIView):
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+
 
 
 
