@@ -26,12 +26,13 @@ from decouple import config
 
 # ...
 
-SECRET_KEY = config('SECRET_KEY')
+#SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = 'jhdgflhflafgwuirfwfbdlfkdf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -169,3 +170,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 CRON_CLASSES = [
     'feeds.cronjobs.delete_story.DeleteStory',
 ]
+
+CHANNEL_LAYERS = {
+	"default": {
+		"BACKEND": "channels.layers.InMemoryChannelLayer"
+	}
+}

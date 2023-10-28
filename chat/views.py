@@ -28,7 +28,7 @@ class MessageList(generics.ListAPIView):
         return Response(serializer.data)
 
 
-'''class ConversationList(generics.ListAPIView):
+class ConversationList(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = MessageSerializer
 
@@ -48,9 +48,9 @@ class MessageList(generics.ListAPIView):
         all_conversations = set(all_conversations)
         
         serializer = UserSerializer(all_conversations, many=True)
-        return Response(serializer.data)'''
+        return Response(serializer.data)
 
-def ConversationListView(request):
+"""def ConversationListView(request):
     user = request.user
     queryset = Message.objects.filter(Q(sender=user) | Q(receiver=user)).order_by('timestamp')
     all_conversations = []
@@ -70,4 +70,4 @@ def ConversationListView(request):
 def chat_room(request, room_name):
     return render(request, 'chat/chat.html', {
         'room_name': room_name
-    })
+    })"""

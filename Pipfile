@@ -9,6 +9,7 @@ channels = "*"
 djangorestframework = "*"
 django-cron = "*"
 djangorestframework-simplejwt = "*"
+django-decouple = "*"
 
 [dev-packages]
 
