@@ -28,7 +28,7 @@ class MessageList(generics.ListAPIView):
         return Response(serializer.data)
 
 
-class ConversationList(generics.ListAPIView):
+'''class ConversationList(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = MessageSerializer
 
@@ -48,4 +48,26 @@ class ConversationList(generics.ListAPIView):
         all_conversations = set(all_conversations)
         
         serializer = UserSerializer(all_conversations, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data)'''
+
+def ConversationListView(request):
+    user = request.user
+    queryset = Message.objects.filter(Q(sender=user) | Q(receiver=user)).order_by('timestamp')
+    all_conversations = []
+    for conversations in queryset:
+        if conversations.sender or conversations.receiver not in all_conversations:
+            if conversations.sender == request.user:
+                all_conversations.append(conversations.receiver)
+            else:
+                all_conversations.append(conversations.sender)
+    all_conversations = set(all_conversations)
+    context = {
+        'all_conversations': all_conversations
+    }
+    return render(request, 'chat/conversation_list.html', context)
+
+
+def chat_room(request, room_name):
+    return render(request, 'chat/chat.html', {
+        'room_name': room_name
+    })

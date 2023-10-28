@@ -1,0 +1,17 @@
+
+{% block content %}
+  <div class="conversation-list">
+    <ul class="conversation-items">
+      {% for conversation in all_conversations %}
+        <li class="conversation-item">
+          <div class="conversation-info">
+            <h2>{{conversation.first_name}}</h2>
+          </div>
+
+        </li>
+      {% empty %}
+        <li class="no-conversations">No conversations found.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
