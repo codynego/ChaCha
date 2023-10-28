@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'feeds',
     'django_cron',
+    'chat'
 ]
 
 MIDDLEWARE = [
@@ -153,7 +154,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': False,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_TYPES': ('Bearer',)
 }
 
 AUTH_USER_MODEL = 'userauth.User'
