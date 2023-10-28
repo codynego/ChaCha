@@ -20,10 +20,12 @@ class MessageList(generics.ListAPIView):
         receiver_id = self.kwargs['receiver']
         receiver = User.objects.get(id=receiver_id)
         messages = Message.objects.filter(Q(sender=user, receiver=receiver)).order_by('timestamp')
+        return messages
     
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = MessageSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class ConversationList(generics.ListAPIView):
@@ -32,7 +34,6 @@ class ConversationList(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        receiver = self.kwargs['receiver']
         return Message.objects.filter(Q(sender=user) | Q(receiver=user)).order_by('timestamp')
 
     def get(self, request, *args, **kwargs):
@@ -40,8 +41,11 @@ class ConversationList(generics.ListAPIView):
         all_conversations = []
         for conversations in queryset:
             if conversations.sender or conversations.receiver not in all_conversations:
-                all_conversations.append(conversations.sender)
-                all_conversations.append(conversations.receiver)
+                if conversations.sender == request.user:
+                    all_conversations.append(conversations.receiver)
+                else:
+                    all_conversations.append(conversations.sender)
+        all_conversations = set(all_conversations)
         
         serializer = UserSerializer(all_conversations, many=True)
         return Response(serializer.data)
