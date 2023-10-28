@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import permissions
-from .models import Message
+from .models import Message, Conversation
 from .serializers import MessageSerializer, ConversationSerializer
 from userauth.models import User
 from django.db.models import Q
@@ -9,6 +9,20 @@ from rest_framework.response import Response
 from userauth.serializers import UserSerializer
 
 # Create your views here.
+
+
+class ConversationList(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ConversationSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return Conversation.objects.filter(Q(sender=user) | Q(receiver=user)).order_by('timestamp')
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = ConversationSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class MessageList(generics.ListAPIView):
@@ -28,7 +42,7 @@ class MessageList(generics.ListAPIView):
         return Response(serializer.data)
 
 
-class ConversationList(generics.ListAPIView):
+"""class ConversationList(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = MessageSerializer
 
@@ -48,7 +62,7 @@ class ConversationList(generics.ListAPIView):
         all_conversations = set(all_conversations)
         
         serializer = UserSerializer(all_conversations, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data)"""
 
 """def ConversationListView(request):
     user = request.user
@@ -64,10 +78,10 @@ class ConversationList(generics.ListAPIView):
     context = {
         'all_conversations': all_conversations
     }
-    return render(request, 'chat/conversation_list.html', context)
+    return render(request, 'chat/conversation_list.html', context)"""
 
 
-def chat_room(request, room_name):
+"""def chat_room(request, room_name):
     return render(request, 'chat/chat.html', {
         'room_name': room_name
     })"""
