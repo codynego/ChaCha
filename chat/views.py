@@ -76,7 +76,12 @@ class MessageList(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = MessageSerializer(queryset, many=True)
-        return Response(serializer.data)
+        data = {
+            "message": "Messages retrieved successfully.",
+            "status": "success",
+            "data": serializer.data
+        }
+        return Response(data)
     
 
 class SecretKey(APIView):
