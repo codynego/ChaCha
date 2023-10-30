@@ -67,9 +67,10 @@ class MessageList(generics.ListAPIView):
 
     def get_queryset(self, *args, **kwargs):
         user = self.request.user
-        receiver_id = self.kwargs['receiver']
-        receiver = User.objects.get(id=receiver_id)
-        messages = Message.objects.filter(Q(sender=user, receiver=receiver)).order_by('timestamp')
+        room = self.kwargs['room_id']
+        conversation = Conversation.objects.get(room=self.kwargs['room_id'])
+        #receiver = User.objects.get(id=receiver_id)
+        messages = Message.objects.filter(conversation__room=room).order_by('timestamp')
         return messages
     
     def get(self, request, *args, **kwargs):

@@ -21,11 +21,18 @@ class ConversationSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    conversation = ConversationSerializer()
 
     class Meta:
         model = Message
-        fields = ('id', 'sender', 'receiver', 'message', 'is_read', 'timestamp')
+        fields = ('id', 'conversation', 'message', 'is_read', 'timestamp')
         read_only_fields = ('id', 'timestamp')
+
+    
+    def get_conversation(self, obj):
+        conversation_data = self.conversation.data
+        conversation_data.pop('timestamp', None)
+        return conversation_data
 
 
 """class ConversationSerializer(serializers.ModelSerializer):

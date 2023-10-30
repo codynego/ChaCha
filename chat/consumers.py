@@ -60,10 +60,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         conversation = Conversation.objects.get(room=room_name)
 
         new_message = Message.objects.create(
-            sender=self.user,
-            receiver=conversation.receiver,
             conversation=conversation,
-            message=message
+            message=message,
+            is_read=False
         )
 
         new_message.save()

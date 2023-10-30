@@ -3,7 +3,7 @@ from .views import MessageList, ConversationList, SecretKey, ConversationDetail
 
 
 urlpatterns = [
-    path('messages/<int:receiver>/', MessageList.as_view()),
+    path('messages/<str:room_id>/', MessageList.as_view()),
     path('conversations/', ConversationList.as_view()),
     path('secretkey/', SecretKey.as_view()),
     path('conversations/<int:pk>/', ConversationDetail.as_view()),
