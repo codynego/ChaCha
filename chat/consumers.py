@@ -67,4 +67,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         new_message.save()
-

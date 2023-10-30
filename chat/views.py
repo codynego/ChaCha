@@ -13,7 +13,7 @@ from .utils import generate_keys
 # Create your views here.
 
 
-class ConversationList(generics.ListAPIView):
+class ConversationList(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ConversationSerializer
 
@@ -24,7 +24,41 @@ class ConversationList(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = ConversationSerializer(queryset, many=True)
-        return Response(serializer.data)
+        data = {
+            "message": "Conversations retrieved successfully.",
+            "status": "success",
+            "data": serializer.data
+        }
+        return Response(data)
+    
+    def post(self, request, *args, **kwargs):
+        receiver_id = self.request.data['receiver']
+        receiver = User.objects.get(id=receiver_id)
+        if Conversation.objects.filter(Q(sender=request.user, receiver=receiver) | Q(sender=receiver, receiver=request.user)).exists():
+            conversation = Conversation.objects.get(Q(sender=request.user, receiver=receiver) | Q(sender=receiver, receiver=request.user))
+            serializer = ConversationSerializer(conversation)
+            return Response(serializer.data)
+        serializer = ConversationSerializer(data=request.data, context={'request': request, 'receiver': receiver})
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
+
+class ConversationDetail(generics.DestroyAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ConversationSerializer
+    queryset = Conversation.objects.all()
+
+    
+    def delete(self, request, *args, **kwargs):
+        conversation = Conversation.objects.get(id=self.kwargs['pk'])
+        conversation.delete()
+        data = {
+            "message": "Conversation deleted successfully.",
+            "status": "success"
+        }
+        return Response(data)
 
 
 class MessageList(generics.ListAPIView):

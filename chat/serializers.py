@@ -12,6 +12,13 @@ class ConversationSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'timestamp')
 
 
+    def create(self, validated_data):
+        sender = self.context['request'].user
+        receiver = self.context['receiver']
+        conversation = Conversation.objects.create(sender=sender, receiver=receiver)
+        return conversation
+
+
 
 class MessageSerializer(serializers.ModelSerializer):
 
