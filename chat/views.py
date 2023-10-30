@@ -52,13 +52,20 @@ class ConversationDetail(generics.DestroyAPIView):
 
     
     def delete(self, request, *args, **kwargs):
-        conversation = Conversation.objects.get(id=self.kwargs['pk'])
-        conversation.delete()
-        data = {
-            "message": "Conversation deleted successfully.",
-            "status": "success"
-        }
-        return Response(data)
+        if Conversation.objects.filter(room=self.kwargs['pk']).exists():
+            conversation = Conversation.objects.get(room=self.kwargs['pk'])
+            conversation.delete()
+            data = {
+                "message": "Conversation deleted successfully.",
+                "status": "success"
+            }
+            return Response(data)
+        else:
+            data = {
+                "message": "Conversation does not exist.",
+                "status": "error"
+            }
+            return Response(data)
 
 
 class MessageList(generics.ListAPIView):
