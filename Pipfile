@@ -10,6 +10,7 @@ djangorestframework = "*"
 django-cron = "*"
 djangorestframework-simplejwt = "*"
 django-decouple = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

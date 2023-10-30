@@ -33,6 +33,7 @@ SECRET_KEY = 'jhdgflhflafgwuirfwfbdlfkdf'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -49,12 +50,16 @@ INSTALLED_APPS = [
     'userauth',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework.authtoken',
     'feeds',
     'django_cron',
-    'chat'
+    'chat',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', #corsheaders
+    'django.middleware.common.CommonMiddleware', #corsheaders
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
