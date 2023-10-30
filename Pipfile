@@ -11,6 +11,7 @@ django-cron = "*"
 djangorestframework-simplejwt = "*"
 django-decouple = "*"
 django-cors-headers = "*"
+cryptography = "*"
 
 [dev-packages]
 

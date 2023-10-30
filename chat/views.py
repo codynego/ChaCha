@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework import permissions
 from .models import Message, Conversation
 from .serializers import MessageSerializer, ConversationSerializer
@@ -7,6 +8,7 @@ from userauth.models import User
 from django.db.models import Q
 from rest_framework.response import Response
 from userauth.serializers import UserSerializer
+from .utils import generate_keys
 
 # Create your views here.
 
@@ -40,6 +42,20 @@ class MessageList(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = MessageSerializer(queryset, many=True)
         return Response(serializer.data)
+    
+
+class SecretKey(APIView):
+    #permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        private_key, public_key = generate_keys()
+        secret_key = {
+            'private_key': private_key.decode('utf-8'),
+            'public_key': public_key.decode('utf-8')
+        }
+        return Response(secret_key)
+
+
 
 
 """class ConversationList(generics.ListAPIView):

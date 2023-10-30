@@ -6,7 +6,7 @@ from userauth.models import User
 class Conversation(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receivers')
-    room = models.CharField(max_length=100, null=True, blank=True)
+    room = models.UUIDField(auto_created=True, unique=True, editable=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
