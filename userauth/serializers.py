@@ -1,15 +1,16 @@
 from rest_framework  import serializers
-from .models import User, Review, Interest
+from .models import User, Review, Interest, OTP
 
 from rest_framework import serializers
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(min_length=8, write_only=True)
-    password = serializers.CharField(min_length=8, write_only=True, required=True)
+    #password = serializers.CharField(min_length=8, write_only=True, required=True)
     
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password', 'confirm_password']
+        extra_kwargs = {'password': {'write_only': True}}
 
             
 
@@ -37,6 +38,21 @@ class RegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password', None)
         return User.objects.create_user(**validated_data)
     
+class VerifyEmailSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = OTP
+        fields = ['otp', 'email']
+
+
+class ResendVerifyEmailSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = OTP
+        fields = ['email']
+
 
 class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()

@@ -46,6 +46,15 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.rating = avg_review
         self.save() 
         return review_count, avg_review
+    
+
+class OTP(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otp')
+    otp = models.CharField(max_length=6, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return self.otp
 
 
 class Review(models.Model):
