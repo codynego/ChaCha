@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Story, StoryImage, StoryText, StoryVideo, StoryReaction
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
+from userauth.serializers import UserSerializer, ProfileSerializer
 
 
 from rest_framework import serializers
@@ -11,6 +12,7 @@ from django.db.models import Q
 class StorySerializer(serializers.ModelSerializer):
     content = serializers.SerializerMethodField()
     reactions_count = serializers.SerializerMethodField()
+    user = ProfileSerializer()
 
     class Meta:
         model = Story
@@ -69,3 +71,18 @@ class StoryReactionSerializer(serializers.ModelSerializer):
         story = Story.objects.get(id=story_id)
         reaction = StoryReaction.objects.create(story=story, **validated_data)
         return reaction
+    
+
+class StoriesSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer()
+
+    class Meta:
+        model = Story
+        fields = ('id', 'user', 'object_id', 'content', 'reactions_count')
+
+
+
+    def to_representation(self, instance):
+        representation = super(StorySerializer, self).to_representation(instance)
+        representation['content'] = self.get_content(instance)
+        return representation

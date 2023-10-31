@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import Story, StoryImage, StoryText, StoryVideo, StoryReaction
-from .serializers import StorySerializer, StoryImageSerializer, StoryTextSerializer, StoryVideoSerializer, StoryReactionSerializer
+from .serializers import StorySerializer, StoryImageSerializer, StoryTextSerializer,\
+StoryVideoSerializer, StoryReactionSerializer, StoriesSerializer
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
 
 # Create your views here.
 
@@ -43,6 +45,22 @@ class StoryReactionGetAPIView(generics.ListCreateAPIView):
     serializer_class = StoryReactionSerializer
     permission_classes = (IsAuthenticated,)
 
+
+class Stories(generics.ListAPIView):
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Story.objects.filter(Q(user=user) | Q(user__in=user.following.all()))
+        return queryset
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        queryset = self.get_queryset()
+        serializer = StorySerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
         

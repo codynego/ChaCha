@@ -1,12 +1,28 @@
 from rest_framework  import serializers
 from .models import User, Review, Interest
 
+from rest_framework import serializers
+
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(min_length=8, write_only=True)
+    password = serializers.CharField(min_length=8, write_only=True, required=True)
+    
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password', 'confirm_password']
 
+            
+
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Username already exists.")
+        return value
+    
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email already exists.")
+        return value
 
     def validate(self, data):
         password = data.get('password')
@@ -32,6 +48,14 @@ class UserSerializer(serializers.ModelSerializer):
     def get_followers_count(self, obj):
         return obj.followers.count()
     
+
+class ProfileSerializer(serializers.ModelSerializer):
+    interest = serializers.StringRelatedField(many=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'bio', 'interest', 'rating', 'profile_picture']
+        read_only_fields = ('username', 'interest', 'rating', 'profile_picture')
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

@@ -9,12 +9,14 @@ from django.db.models import Q
 from rest_framework.response import Response
 from userauth.serializers import UserSerializer
 from .utils import generate_keys
+from .permissions import IsParticipantPermission
+from rest_framework import status
 
 # Create your views here.
 
 
 class ConversationList(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated)
     serializer_class = ConversationSerializer
 
     def get_queryset(self):
@@ -46,14 +48,30 @@ class ConversationList(generics.ListCreateAPIView):
     
 
 class ConversationDetail(generics.DestroyAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = [permissions.IsAuthenticated, IsParticipantPermission]
     serializer_class = ConversationSerializer
     queryset = Conversation.objects.all()
 
-    
+    def get(self, request, *args, **kwargs):
+        conversation = self.get_object()
+        if request.user == conversation.sender or request.user == conversation.receiver:
+            serializer = ConversationSerializer(conversation)
+            data = {
+                "message": "Conversation retrieved successfully.",
+                "status": "success",
+                "data": serializer.data
+            }
+            return Response(data)
+        else:
+            data = {
+                "message": "You are not authorized to view this conversation.",
+                "status": "error"
+            }
+            return Response(data, status=status.HTTP_403_FORBIDDEN)
+
     def delete(self, request, *args, **kwargs):
-        if Conversation.objects.filter(room=self.kwargs['pk']).exists():
-            conversation = Conversation.objects.get(room=self.kwargs['pk'])
+        conversation = self.get_object()
+        if request.user == conversation.sender or request.user == conversation.receiver:
             conversation.delete()
             data = {
                 "message": "Conversation deleted successfully.",
@@ -62,10 +80,11 @@ class ConversationDetail(generics.DestroyAPIView):
             return Response(data)
         else:
             data = {
-                "message": "Conversation does not exist.",
+                "message": "You are not authorized to delete this conversation.",
                 "status": "error"
             }
-            return Response(data)
+            return Response(data, status=status.HTTP_403_FORBIDDEN)
+
 
 
 class MessageList(generics.ListAPIView):
