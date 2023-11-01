@@ -7,7 +7,7 @@ import uuid
 class Conversation(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receivers')
-    room = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    room = models.CharField(max_length=255, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -19,7 +19,7 @@ class Conversation(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.room:
-            self.room = uuid.uuid4()
+            self.room = uuid.uuid4().hex
         super(Conversation, self).save(*args, **kwargs)
 
 

@@ -16,7 +16,7 @@ from rest_framework import status
 
 
 class ConversationList(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticated)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ConversationSerializer
 
     def get_queryset(self):
