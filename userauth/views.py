@@ -17,6 +17,12 @@ from .utils import token_generator
 # Create your views here.
 
 class RegistrationAPIView(generics.CreateAPIView):
+    """
+    This endpoint allows unauthenticated users to register new user.
+
+    HTTP Methods:
+    
+    """
     serializer_class = RegistrationSerializer
 
     
