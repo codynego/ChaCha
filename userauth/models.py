@@ -17,6 +17,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     interest = models.ManyToManyField('Interest', blank=True, related_name='users')
     rating = models.FloatField(default=0, null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    public_key = models.CharField(max_length=100, null=True, blank=True)
     followers = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='following')
     
     is_active = models.BooleanField(default=True)
@@ -24,6 +25,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now)
+    open_to_chat = models.BooleanField(default=False)
     last_seen = models.DateTimeField(default=timezone.now)
 
     objects = CustomUserManager()

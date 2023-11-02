@@ -111,14 +111,17 @@ class MessageList(generics.ListAPIView):
     
 
 class SecretKey(APIView):
-    #permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
+        user = self.request.user
         private_key, public_key = generate_keys()
         secret_key = {
             'private_key': private_key.decode('utf-8'),
             'public_key': public_key.decode('utf-8')
         }
+        user.public_key = public_key.decode('utf-8')
+        user.save()
         return Response(secret_key)
 
 

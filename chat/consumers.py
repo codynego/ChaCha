@@ -17,13 +17,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
 
-        # Join room group
-
         if self.user.is_authenticated:
             await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
+                self.room_group_name,
+                self.channel_name
+            )
             await self.accept()
         else:
             await self.close()
@@ -38,20 +36,62 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
-        await self.save_message(message)
-        await self.channel_layer.group_send(
-        self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message
-            }
-        )
+        
+        if 'message' in text_data_json:
+            # Message handling
+            message = text_data_json['message']
+            await self.save_message(message)
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'message': message
+                }
+            )
+
+        elif 'shared_key' in text_data_json:
+            # Shared key handling
+            shared_key = text_data_json['shared_key']
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'send_shared_key',
+                    'shared_key': shared_key
+                }
+            )
+
+        elif 'symmetric_key' in text_data_json:
+            symmetric_key = text_data_json['symmetric_key']
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'send_symmetric_key',
+                    'symmetric_key': symmetric_key
+                }
+            )
 
     async def chat_message(self, event):
         message = event['message']
+        conversation = Conversation.objects.get(room=self.room_name)
         await self.send(text_data=json.dumps({
+            'type': 'message',
+            'sender': conversation.sender.username,
+            'receiver': conversation.receiver.username,
             'message': message
+        }))
+
+    async def send_shared_key(self, event):
+        shared_key = event['shared_key']
+        await self.send(text_data=json.dumps({
+            'type': 'shared_key',
+            'shared_key': shared_key
+        }))
+
+    async def send_symmetric_key(self, event):
+        symmetric_key = event['symmetric_key']
+        await self.send(text_data=json.dumps({
+            'type': 'symmetric_key',
+            'symmetric_key': symmetric_key
         }))
 
     @database_sync_to_async
