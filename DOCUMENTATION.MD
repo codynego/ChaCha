@@ -305,37 +305,6 @@ The ChaCha API allows users to connect and have interesting conversations with o
     }
     ```
 
-## Authentication
-
-
-- **Obtain an Access Token**
-- **Endpoint:** `POST /api/auth/token/`
-- **Description:** Obtain an access token for authentication.
-- **Authentication:** None required.
-- **Request:**
-- JSON body:
-    ```json
-    {
-        "username": "your_username",
-        "password": "your_password"
-    }
-    ```
-
-## User Registration and Verification
-
-Users can register using the `/auth/user/register/` endpoint. 
-
-Email verification is required and can be initiated using `/auth/user/verify-email/`. 
-Resend verification emails using `/auth/user/resend-verify-email/`.
-
-## User Management
-
-- Manage user profiles using `/user/me/`.
-- Follow or unfollow other users with `/user/follow/` and `/user/unfollow/`.
-- Post reviews for users using `/user/review/`.
-- Retrieve followers and users being followed with `/user/followers/` and `/user/following/`.
-- Add or remove interests using `/user/interest/`.
-
 This documentation serves as a comprehensive guide to using the BoredChat API. Make authenticated requests with the obtained tokens and provide necessary data in the request bodies for the respective endpoints.
 
 If you have any questions or need further assistance, please contact our support team.
