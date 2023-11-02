@@ -10,6 +10,7 @@ urlpatterns = [
     #path('story/reaction/', views.StoryReactionAPIView.as_view(), name='story_reaction'),
     path('story/reaction/<story_id>/', views.StoryReactionGetAPIView.as_view(), name='story_reaction'),
     path('stories/', views.Stories.as_view(), name='stories'),
+    path('feeds/', views.Feeds.as_view(), name='feeds'),
 
 ]
 

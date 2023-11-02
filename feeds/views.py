@@ -11,13 +11,16 @@ from django.db.models import Q
 
 # Create your views here.
 
-
-class StoryAPIView(generics.ListAPIView):
-    queryset = Story.objects.all()
-    serializer_class = StorySerializer
-    permission_classes = (IsAuthenticated,)
-
 class StoryTextAPIView(generics.ListCreateAPIView):
+    """
+    This endpoint allows for creation and listing of story text.
+
+    Authentication required.
+    body: {
+        "text": "This is a sample story text."
+    }
+    """
+
     queryset = StoryText.objects.all()
     serializer_class = StoryTextSerializer
     #permission_classes = (IsAuthenticated,)
@@ -61,6 +64,29 @@ class Stories(generics.ListAPIView):
         queryset = self.get_queryset()
         serializer = StorySerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class Feeds(generics.ListAPIView):
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Story.filter(user__interest__in=user.interests.all())
+        return queryset
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        queryset = self.get_queryset()
+        serializer = StorySerializer(queryset, many=True)
+
+        data = {
+            "message": "Stories retrieved successfully.",
+            "status": "success",
+            "data": serializer.data
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
 
         

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django_cron',
     'chat',
     'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
