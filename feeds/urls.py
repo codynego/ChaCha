@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('story/', views.StoryAPIView.as_view(), name='story-list'),
+    #path('story/', views.StoryAPIView.as_view(), name='story-list'),
     path('story/<int:pk>/', views.StorySingleAPIView.as_view(), name='story'),
     path('story/text/', views.StoryTextAPIView.as_view(), name='story_text'),
     path('story/image/', views.StoryImageAPIView.as_view(), name='story_image'),
@@ -13,5 +13,6 @@ urlpatterns = [
     path('feeds/', views.Feeds.as_view(), name='feeds'),
 
 ]
+
 
 
