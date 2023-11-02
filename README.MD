@@ -4,6 +4,50 @@ The ChaCha API allows users to connect and have interesting conversations with o
 
 This README provides an overview of the available endpoints and their functionality.
 
+
+## Getting Started
+
+### Prerequisites
+
+Before setting up and running the API, ensure you have the following prerequisites installed:
+
+- Python (3.6 or higher)
+- Django
+- Docker
+
+## Installation
+
+To use this Django REST API, follow these instructions:
+
+1. **Installation:**
+   - Clone the repository to your local machine:
+     ```bash
+     git clone https://github.com/codynego/ChaCha.git
+     cd your-repo
+     ```
+
+   - Install project dependencies using pip:
+     ```bash
+     pip install -r requirements.txt
+     ```
+
+   - Apply database migrations:
+     ```bash
+     python manage.py makemigrations
+     python manage.py migrate
+     ```
+
+   - Pull and run all images from docker:
+     ```bash
+     docker-compose pull
+     docker-compose up
+     ```
+   - Start the development server:
+     ```bash
+     python manage.py runserver
+     ```
+
+
 ## Endpoints
 
 The following are the available endpoints for the BoredChat API:

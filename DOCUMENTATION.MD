@@ -305,7 +305,11 @@ The ChaCha API allows users to connect and have interesting conversations with o
     }
     ```
 
-This documentation serves as a comprehensive guide to using the BoredChat API. Make authenticated requests with the obtained tokens and provide necessary data in the request bodies for the respective endpoints.
+This documentation serves as a comprehensive guide to using the ChaCha API. Make authenticated requests with the obtained tokens and provide necessary data in the request bodies for the respective endpoints.
 
-If you have any questions or need further assistance, please contact our support team.
+If you have any questions or need further assistance, please contact
+
+**Email:** emonenaabednego@gmail.com
+**Twitter:** twitter.com/codynego
+
 
