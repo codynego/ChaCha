@@ -104,7 +104,6 @@ The ChaCha API allows users to connect and have interesting conversations with o
 - **Description:** Retrieve a list of messages for a specific room.
 - **Authentication:** Required.
 - **Request:**
-  - None.
 
 #### Create a New Conversation
 
@@ -115,8 +114,8 @@ The ChaCha API allows users to connect and have interesting conversations with o
   - JSON body:
     ```json
     {
-        "participants": ["user_id1", "user_id2"],
-        "subject": "Conversation subject"
+        "sender": 1,
+        "receiver": 2,
     }
     ```
 
