@@ -21,12 +21,36 @@ class RegistrationAPIView(generics.CreateAPIView):
     This endpoint allows unauthenticated users to register new user.
 
     HTTP Methods:
+        - POST: Create a new user.
+    
+    Request (POST):
+        - JSON body: {
+            "username": "username", 
+            "email": "email", "password": "password"
+        }
+
+    Response (POST):
+        - JSON body: {
+            "message": "User registered successfully!",
+            "statusCode": 201,
+            "data": {
+                "id": 1,
+                "username": "username",
+                "email": "email",
+                "first_name": "",
+                "last_name": "",
+
+            }
+    
+    Authentication:
+        - Authentication is not required.
     
     """
     serializer_class = RegistrationSerializer
 
     
     def post(self, request):
+        """ Register new user."""
         serializer = RegistrationSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -43,6 +67,27 @@ class RegistrationAPIView(generics.CreateAPIView):
         
 
 class VerifyEmailAPIView(generics.CreateAPIView):
+    """
+    This endpoint allows unauthenticated users to verify email.
+
+    HTTP Methods:
+        - POST: Verify email.
+
+    Request (POST):
+        - JSON body: {
+            "otp": "otp", 
+            "email": "email"
+        }
+    
+    Response (POST):
+        - JSON body: {
+            "message": "User verified successfully!",
+            "statusCode": 200,
+        }
+
+    Authentication:
+        - Authentication is not required.
+    """
     serializer_class = VerifyEmailSerializer
 
     def post(self, request, *args, **kwargs):
@@ -91,6 +136,26 @@ class VerifyEmailAPIView(generics.CreateAPIView):
 
 
 class ResendVerifyEmailAPIView(generics.CreateAPIView):
+    """
+    This endpoint allows unauthenticated users to resend verification email.
+
+    HTTP Methods:
+        - POST: Resend verification email.
+
+    Request (POST):
+        - JSON body: {
+            "email": "email"
+        }
+
+    Response (POST):
+        - JSON body: {
+            "message": "OTP sent successfully!",
+            "statusCode": 200,
+        }
+
+    Authentication:
+        - Authentication is not required.
+    """
     serializer_class = VerifyEmailSerializer
 
     def post(self, request, *args, **kwargs):
@@ -117,6 +182,38 @@ class ResendVerifyEmailAPIView(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    This endpoint allows authenticated users to get, update and delete user.
+
+    HTTP Methods:
+        - GET: Get user details.
+        - PUT: Update user details.
+        - DELETE: Delete user.
+
+    Request (PUT):
+        - Requires authentication.
+        - JSON body: {
+            "first_name": "first_name", 
+            "last_name": "last_name", 
+            "email": "email"
+        }
+
+    Response (PUT):
+        - JSON body: {
+            "message": "User details updated successfully!",
+            "statusCode": 200,
+            "data": {
+                "id": 1,
+                "username": "username",
+                "email": "email",
+                "first_name": "first_name",
+                "last_name": "last_name",
+            }
+        }
+
+    Authentication:
+        - Authentication is required for all requests.
+    """
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
@@ -157,6 +254,25 @@ class UserAPIView(generics.RetrieveUpdateDestroyAPIView):
     
 
 class FollowUserAPIView(APIView):
+    """
+    This endpoint allows authenticated users to follow other users.
+
+    HTTP Methods:
+        - POST: Follow user.
+
+    Request (POST):
+        - Requires authentication.
+        - JSON body: {
+            "user_id": "user_id"
+        }
+
+    Response (POST):
+        - JSON body: {
+            "message": "User followed successfully!",
+            "statusCode": 200,
+        }
+    """
+
     def post(self, request, user_id):
         user = request.user
         user_to_follow = User.objects.get(id=user_id)
@@ -169,6 +285,24 @@ class FollowUserAPIView(APIView):
     
 
 class UnfollowUserAPIView(APIView):
+    """
+    This endpoint allows authenticated users to unfollow other users.
+
+    HTTP Methods:
+        - POST: Unfollow user.
+
+    Request (POST):
+        - Requires authentication.
+        - JSON body: {
+            "user_id": "user_id"
+        }
+
+    Response (POST):
+        - JSON body: {
+            "message": "User unfollowed successfully!",
+            "statusCode": 200,
+        }
+    """
     def post(self, request, user_id):
         user = request.user
         user_to_unfollow = User.objects.get(id=user_id)
@@ -181,6 +315,15 @@ class UnfollowUserAPIView(APIView):
     
 
 class FollowersAPIView(APIView):
+    """
+    This endpoint allows authenticated users to list followers.
+
+    HTTP Methods:
+        - GET: List followers.
+
+    Response (GET):
+        - List of user followers.
+    """
     def get(self, request):
         user = request.user
         serializer = FollowSerializer(user.followers, many=True)
@@ -193,6 +336,15 @@ class FollowersAPIView(APIView):
     
 
 class FollowingAPIView(APIView):
+    """
+    This endpoint allows authenticated users to list following.
+
+    HTTP Methods:
+        - GET: List following.
+
+    Response (GET):
+        - List of user following.
+    """
     def get(self, request):
         user = request.user
         serializer = FollowSerializer(user.following, many=True)
@@ -206,7 +358,29 @@ class FollowingAPIView(APIView):
 
 
 class ReviewAPIView(APIView):
-    #authentication_classes = [authentication.TokenAuthentication]
+    """
+    This endpoint allows authenticated users to post and list reviews.
+
+    HTTP Methods:
+        - GET: List existing reviews.
+        - POST: Post review.
+
+    Response (GET):
+        - List of reviews.
+
+    Response (POST):
+        - JSON body: {
+            "message": "Review posted successfully!",
+            "statusCode": 201,
+            "data": {
+            "review_count": review_count,
+            "avg_review": avg_review,
+            "reviews": serializer.data
+            }
+        }
+
+    """
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -249,6 +423,26 @@ class ReviewAPIView(APIView):
         
 
 class InterestAPIView(generics.ListCreateAPIView):
+    """
+    This endpoint allows authenticated users to list and add interests.
+
+    HTTP Methods:
+        - GET: List existing interests.
+        - POST: Add interest.
+
+    Response (GET):
+        - List of interests.
+
+    Response (POST):
+        - JSON body: {
+            "message": "Interest added successfully!",
+            "statusCode": 201,
+            "data": {
+                "id": 1,
+                "name": "name",
+            }
+
+    """
     queryset = Interest.objects.all()
     serializer_class = InterestSerializer
     permission_classes = (IsAuthenticated,)
