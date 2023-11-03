@@ -10,10 +10,16 @@ class StoryMedia(models.Model):
     file = models.FileField(upload_to='stories/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
+    def __str__(self) -> str:
+        return f'{self.user.username} - {self.file.name}'
+
 class StoryText(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='story_texts')
     text = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self) -> str:
+        return f'{self.user.username} - {self.text[:10]}'
 
 
 class Story(models.Model):
