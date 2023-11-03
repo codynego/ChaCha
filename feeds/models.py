@@ -5,14 +5,9 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 # Create your models here.
 
-class StoryImage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='story_images')
-    image = models.ImageField(upload_to='story_images/', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-
-class StoryVideo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='story_videos')
-    video = models.FileField(upload_to='story_videos/', null=True, blank=True)
+class StoryMedia(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='story_medias')
+    file = models.FileField(upload_to='stories/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
 class StoryText(models.Model):

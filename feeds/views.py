@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.views import APIView
-from .models import Story, StoryImage, StoryText, StoryVideo, StoryReaction
-from .serializers import StorySerializer, StoryImageSerializer, StoryTextSerializer,\
-StoryVideoSerializer, StoryReactionSerializer, StoriesSerializer
+from .models import Story, StoryMedia, StoryText, StoryReaction
+from .serializers import StorySerializer, StoryMediaSerializer, StoryTextSerializer,\
+StoryReactionSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
+from moviepy.editor import VideoFileClip
+import tempfile
 
 # Create your views here.
 
@@ -51,29 +53,8 @@ class StoryTextAPIView(generics.ListCreateAPIView):
     serializer_class = StoryTextSerializer
     permission_classes = (IsAuthenticated,)
 
-class StoryImageAPIView(generics.ListCreateAPIView):
-    """
-    This endpoint allows authenticated users to create and list story image.
 
-    HTTP Methods:
-        - POST: Create a new story image.
-        - GET: List existing story image.
-
-    Request (POST):
-        - Requires authentication.
-        - JSON body: {"image": "image.jpg"}
-
-    Response (GET):
-        - List of story images.
-
-    Authentication:
-        - Authentication is required for both POST and GET requests.
-    """
-    queryset = StoryImage.objects.all()
-    serializer_class = StoryImageSerializer
-    permission_classes = (IsAuthenticated,)
-
-class StoryVideoAPIView(generics.ListCreateAPIView):
+class StoryMediaAPIView(generics.ListCreateAPIView):
     """
     This endpoint allows authenticated users to create and list story video.
 
@@ -92,9 +73,67 @@ class StoryVideoAPIView(generics.ListCreateAPIView):
         - Authentication is required for both POST and GET requests.
 
     """
-    queryset = StoryVideo.objects.all()
-    serializer_class = StoryVideoSerializer
+    serializer_class = StoryMediaSerializer
+    queryset = StoryMedia.objects.all()
     permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        file = serializer.validated_data['file']
+        content_type = file.content_type
+
+        if not content_type.startswith('image/') and not content_type.startswith('video/'):
+            return Response({'error': 'Invalid file type'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        """max_size = 10 * 1024 * 1024
+        if file.size > max_size:
+            data = {
+                "message": "File size is too large.",
+                "status": "error",
+            }
+            return Response({'error': 'File size is too large'}, status=status.HTTP_400_BAD_REQUEST)"""
+
+
+        if content_type.startswith('video/'):
+            # Create a temporary file for processing
+            with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as temp_file:
+                temp_file.write(file.read())
+                temp_file_path = temp_file.name
+
+                clip = VideoFileClip(temp_file_path)
+                duration = clip.duration
+                if duration > 60:
+                    # Shorten the video to 1 minute (60 seconds)
+                    clip = clip.subclip(0, 60)
+                    clip.write_videofile(temp_file_path, threads=4, codec='libx264')
+
+                # Set the authenticated user as the user field
+                serializer.validated_data['user'] = request.user
+
+                # Save the processed file back to the serializer
+                file.name = temp_file.name
+                serializer.validated_data['file'] = file
+
+                self.perform_create(serializer)
+                data = {
+                    "message": "Story uploaded successfully.",
+                    "status": "success",
+                    "data": serializer.data
+                }
+                return Response(data, status=status.HTTP_201_CREATED)
+
+        
+        # Set the authenticated user as the user field
+        serializer.validated_data['user'] = request.user
+
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+
+
 
 
 class StorySingleAPIView(generics.RetrieveDestroyAPIView):

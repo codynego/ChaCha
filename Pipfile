@@ -12,9 +12,10 @@ djangorestframework-simplejwt = "*"
 django-decouple = "*"
 django-cors-headers = "*"
 cryptography = "*"
-celery = {extras = ["redis"], version = "*"}
 pyjwt = "*"
 drf-yasg = "*"
+moviepy = "*"
+celery = {extras = ["redis"], version = "*"}
 
 [dev-packages]
 

@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Story, StoryImage, StoryText, StoryVideo, StoryReaction
+from .models import Story, StoryText, StoryMedia, StoryReaction
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 from userauth.serializers import UserSerializer, ProfileSerializer
 
 
 from rest_framework import serializers
-from .models import Story, StoryText, StoryImage, StoryVideo
+from .models import Story, StoryText, StoryMedia
 from django.db.models import Q
 
 class StorySerializer(serializers.ModelSerializer):
@@ -26,10 +26,8 @@ class StorySerializer(serializers.ModelSerializer):
         print(content_object)
         if isinstance(content_object, StoryText):
             return content_object.text
-        elif isinstance(content_object, StoryImage):
-            return content_object.image.url
-        elif isinstance(content_object, StoryVideo):
-            return content_object.video.url
+        elif isinstance(content_object, StoryMedia):
+            return content_object.file.url
         else:
             return None
 
@@ -41,16 +39,12 @@ class StorySerializer(serializers.ModelSerializer):
 
 
 
-class StoryImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StoryImage
-        fields = '__all__'
+class StoryMediaSerializer(serializers.ModelSerializer):
 
-
-class StoryVideoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = StoryVideo
+        model = StoryMedia
         fields = '__all__'
+        read_only_fields = ('user',)
 
 
 class StoryTextSerializer(serializers.ModelSerializer):

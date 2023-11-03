@@ -19,7 +19,7 @@ application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": TokenAuthMiddleware(
         URLRouter(
-            websocket_urlpatterns
+             websocket_urlpatterns
         )
     ),
 })
