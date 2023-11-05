@@ -9,12 +9,7 @@ ENV MYSQL_DATABASE=${MYSQL_DATABASE}
 ENV MYSQL_USER=${MYSQL_USER}
 ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
-RUN apt-get update && apt-get install -y \
-    mysql-server \
-    mysql-client \
-    libmysqlclient-dev \
-    vim \
-    && rm -rf /var/lib/apt/lists/*
+
 
 RUN mkdir /code
 WORKDIR /code
@@ -23,6 +18,10 @@ COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 
 COPY . /code/
+
+RUN python manage.py migrate
+RUN python manage.py collectstatic --noinput
+RUN python manage.py runcrons
 
 
 CMD ["python", "manage.py", "runserver"]
