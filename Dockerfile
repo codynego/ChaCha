@@ -1,4 +1,4 @@
-FROM django:3.10-bullseye
+FROM python:3.8-slim
 
 
 ENV DJANGO_SECRET_KEY=secret
