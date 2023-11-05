@@ -7,6 +7,12 @@ ENV MYSQL_DATABASE=${MYSQL_DATABASE}
 ENV MYSQL_USER=${MYSQL_USER}
 ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
+# Install the specific Python version required by your project
+RUN apt-get update \
+    && apt-get install -y python3.8 \
+    && apt-get clean \
+    && ln -s /usr/bin/python3.8 /usr/local/bin/python
+
 RUN mkdir /code
 WORKDIR /code
 
@@ -14,7 +20,8 @@ RUN pip install --upgrade pip
 RUN pip install pipenv
 
 COPY Pipfile Pipfile.lock /code/
-RUN pipenv install --deploy --ignore-pipfile
+# Specify the Python version before running pipenv install
+RUN pipenv --python /usr/local/bin/python3.8 install --deploy --ignore-pipfile
 
 COPY . /code/
 
