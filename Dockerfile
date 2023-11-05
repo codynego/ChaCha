@@ -17,7 +17,7 @@ RUN pip install pipenv
 
 COPY Pipfile Pipfile.lock /code/
 # Specify the Python version before running pipenv install
-RUN pipenv --deploy --ignore-pipfile
+RUN pipenv install --deploy --ignore-pipfilele
 
 COPY . /code/
 
