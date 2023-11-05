@@ -108,7 +108,7 @@ DATABASES = {
         'NAME': config('MYSQL_DATABASE'),
         'USER': config('MYSQL_USER'),
         'PASSWORD': config('MYSQL_ROOT_PASSWORD'),
-        'HOST': config('MYSQL_HOST'),
+        'HOST': '/var/run/mysqld/mysqld.sock',
         'PORT': config('MYSQL_PORT', cast=int),
 
         
