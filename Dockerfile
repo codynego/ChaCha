@@ -11,8 +11,10 @@ ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 RUN mkdir /code
 WORKDIR /code
 
-RUN pip install --upgrade python3
+
 COPY requirements.txt /code/
+RUN pip install --upgrade pip
+RUN pip install --upgrade python3
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
