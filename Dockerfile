@@ -1,4 +1,4 @@
-FROM django:latest
+FROM django:3.10-bullseye
 
 
 ENV DJANGO_SECRET_KEY=secret
@@ -13,8 +13,6 @@ WORKDIR /code
 
 
 COPY requirements.txt /code/
-RUN pip install --upgrade pip
-RUN pip install --upgrade python3
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
