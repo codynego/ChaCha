@@ -17,9 +17,10 @@ RUN pip install pipenv
 
 COPY Pipfile Pipfile.lock /code/
 # Specify the Python version before running pipenv install
-RUN pip install -r requirements.txt
+
 
 COPY . /code/
+RUN pip install -r requirements.txt
 
 RUN python manage.py migrate
 RUN python manage.py collectstatic --noinput
