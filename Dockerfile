@@ -14,10 +14,11 @@ WORKDIR /code
 
 RUN pip install --upgrade pip
 RUN pip install pipenv
-RUN pipenv shell
+
 
 COPY . /code/
 RUN pipenv install -r requirements.txt
+RUN pipenv shell
 
 
 RUN python manage.py migrate
