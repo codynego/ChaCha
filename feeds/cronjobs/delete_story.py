@@ -1,6 +1,6 @@
 #a function that automatically deletes a story from the database after 24 hours using django-cron
 from django_cron import CronJobBase, Schedule
-from feeds.models import Story, StoryImage, StoryVideo, StoryText
+from feeds.models import Story, StoryMedia, StoryText
 from datetime import timedelta
 from django.utils import timezone
 
@@ -14,9 +14,7 @@ class DeleteStory(CronJobBase):
         now = timezone.now()
         stories = Story.objects.filter(created_at__lt=now - timedelta(hours=24))
         storyText = StoryText.objects.filter(created_at__lt=now - timedelta(hours=24))
-        storyVideo = StoryVideo.objects.filter(created_at__lt=now - timedelta(hours=24))
-        storyImage = StoryImage.objects.filter(created_at__lt=now - timedelta(hours=24))
+        storyMedia = StoryMedia.objects.filter(created_at__lt=now - timedelta(hours=24))
         stories.delete()
         storyText.delete()
-        storyVideo.delete()
-        storyImage.delete()
+        storyMedia.delete()

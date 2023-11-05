@@ -16,6 +16,7 @@ pyjwt = "*"
 drf-yasg = "*"
 moviepy = "*"
 celery = {extras = ["redis"], version = "*"}
+gunicorn = "*"
 
 [dev-packages]
 

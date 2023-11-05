@@ -173,6 +173,13 @@ AUTH_USER_MODEL = 'userauth.User'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# settings.py
+
+# Define the base directory for static files
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 CRON_CLASSES = [
     'feeds.cronjobs.delete_story.DeleteStory',
 ]
