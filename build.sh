@@ -14,4 +14,5 @@ python manage.py runcrons
 
 # Command 3
 echo "Starting Server..."
-gunicorn -w 4 -k uvicorn.workers.UvicornWorker your_project.asgi:application
+python manage.py runserver
+#gunicorn -w 4 -k uvicorn.workers.UvicornWorker chacha.asgi:application

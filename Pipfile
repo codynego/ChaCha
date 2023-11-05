@@ -17,6 +17,7 @@ drf-yasg = "*"
 moviepy = "*"
 celery = {extras = ["redis"], version = "*"}
 gunicorn = "*"
+uvicorn = "*"
 
 [dev-packages]
 

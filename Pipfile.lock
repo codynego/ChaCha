@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "bcad85d5877113ba1425138f32cfc0a97b57bb23d0cd432aaba8b2af3a8b142e"
+            "sha256": "c9a323b3aecbe713fb6bb9e6256ea36fe098a4ebe6a73d9126529c64d8eef3cb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -404,6 +404,14 @@
             "index": "pypi",
             "markers": "python_version >= '3.5'",
             "version": "==21.2.0"
+        },
+        "h11": {
+            "hashes": [
+                "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d",
+                "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761"
+            ],
+            "markers": "python_version >= '3.7'",
+            "version": "==0.14.0"
         },
         "hyperlink": {
             "hashes": [
@@ -830,6 +838,15 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==2.0.7"
+        },
+        "uvicorn": {
+            "hashes": [
+                "sha256:368d5d81520a51be96431845169c225d771c9dd22a58613e1a181e6c4512ac33",
+                "sha256:3d19f13dfd2c2af1bfe34dd0f7155118ce689425fdf931177abe832ca44b8a04"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.8'",
+            "version": "==0.24.0"
         },
         "vine": {
             "hashes": [
