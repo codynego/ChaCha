@@ -12,13 +12,15 @@ RUN mkdir /code
 WORKDIR /code
 
 COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN pipenv install -r requirements.txt
 
 COPY . /code/
 
+RUN pipenv shell
 RUN python manage.py migrate
 RUN python manage.py collectstatic --noinput
 RUN python manage.py runcrons
+
 
 
 CMD ["python", "manage.py", "runserver"]
