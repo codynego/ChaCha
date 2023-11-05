@@ -7,6 +7,7 @@ ENV MYSQL_DATABASE=${MYSQL_DATABASE}
 ENV MYSQL_USER=${MYSQL_USER}
 ENV MYSQL_PASSWORD=${MYSQL_PASSWORD}
 
+RUN apt-get update && apt-get install -y default-libmysqlclient-dev build-essential
 
 
 RUN mkdir /code
