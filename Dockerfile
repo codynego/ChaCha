@@ -17,8 +17,7 @@ RUN pip install pipenv
 
 
 COPY . /code/
-RUN pipenv install -r requirements.txt
-RUN pipenv shell
+RUN pipenv install --deploy --ignore-pipfile
 
 
 RUN python manage.py migrate
