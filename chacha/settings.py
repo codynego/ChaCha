@@ -26,8 +26,8 @@ from decouple import config
 
 # ...
 
-#SECRET_KEY = config('SECRET_KEY')
-SECRET_KEY = 'jhdgflhflafgwuirfwfbdlfkdf'
+SECRET_KEY = config('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -218,5 +218,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_SSL = True
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'codynego@gmail.com'
-EMAIL_HOST_PASSWORD = 'jqpistshewlexgjq'
+EMAIL_HOST_USER =  config('EMAIL_ADDRESS')
+EMAIL_HOST_PASSWORD =  config('EMAIL_PASSWORD')
